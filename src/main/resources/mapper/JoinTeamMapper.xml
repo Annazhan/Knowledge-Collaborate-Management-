@@ -1,0 +1,258 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.knw.dao.JoinTeamMapper">
+  <resultMap id="BaseResultMap" type="com.example.knw.pojo.JoinTeam">
+    <id column="join_id" jdbcType="INTEGER" property="joinId" />
+    <result column="join_user" jdbcType="INTEGER" property="joinUser" />
+    <result column="team_id" jdbcType="INTEGER" property="teamId" />
+    <result column="join_time" jdbcType="DATE" property="joinTime" />
+    <result column="apply_time" jdbcType="DATE" property="applyTime" />
+    <result column="auth" jdbcType="INTEGER" property="auth" />
+    <result column="status" jdbcType="INTEGER" property="status" />
+    <result column="position" jdbcType="VARCHAR" property="position" />
+  </resultMap>
+  <sql id="Example_Where_Clause">
+    <where>
+      <foreach collection="oredCriteria" item="criteria" separator="or">
+        <if test="criteria.valid">
+          <trim prefix="(" prefixOverrides="and" suffix=")">
+            <foreach collection="criteria.criteria" item="criterion">
+              <choose>
+                <when test="criterion.noValue">
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue">
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue">
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue">
+                  and ${criterion.condition}
+                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Update_By_Example_Where_Clause">
+    <where>
+      <foreach collection="example.oredCriteria" item="criteria" separator="or">
+        <if test="criteria.valid">
+          <trim prefix="(" prefixOverrides="and" suffix=")">
+            <foreach collection="criteria.criteria" item="criterion">
+              <choose>
+                <when test="criterion.noValue">
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue">
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue">
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue">
+                  and ${criterion.condition}
+                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Base_Column_List">
+    join_id, join_user, team_id, join_time, apply_time, auth, `status`, `position`
+  </sql>
+  <select id="selectByExample" parameterType="com.example.knw.pojo.JoinTeamExample" resultMap="BaseResultMap">
+    select
+    <if test="distinct">
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    from join_team
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null">
+      order by ${orderByClause}
+    </if>
+  </select>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from join_team
+    where join_id = #{joinId,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from join_team
+    where join_id = #{joinId,jdbcType=INTEGER}
+  </delete>
+  <delete id="deleteByExample" parameterType="com.example.knw.pojo.JoinTeamExample">
+    delete from join_team
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+  </delete>
+  <insert id="insert" parameterType="com.example.knw.pojo.JoinTeam">
+    insert into join_team (join_id, join_user, team_id, 
+      join_time, apply_time, auth, 
+      `status`, `position`)
+    values (#{joinId,jdbcType=INTEGER}, #{joinUser,jdbcType=INTEGER}, #{teamId,jdbcType=INTEGER}, 
+      #{joinTime,jdbcType=DATE}, #{applyTime,jdbcType=DATE}, #{auth,jdbcType=INTEGER}, 
+      #{status,jdbcType=INTEGER}, #{position,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.example.knw.pojo.JoinTeam">
+    insert into join_team
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="joinId != null">
+        join_id,
+      </if>
+      <if test="joinUser != null">
+        join_user,
+      </if>
+      <if test="teamId != null">
+        team_id,
+      </if>
+      <if test="joinTime != null">
+        join_time,
+      </if>
+      <if test="applyTime != null">
+        apply_time,
+      </if>
+      <if test="auth != null">
+        auth,
+      </if>
+      <if test="status != null">
+        `status`,
+      </if>
+      <if test="position != null">
+        `position`,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="joinId != null">
+        #{joinId,jdbcType=INTEGER},
+      </if>
+      <if test="joinUser != null">
+        #{joinUser,jdbcType=INTEGER},
+      </if>
+      <if test="teamId != null">
+        #{teamId,jdbcType=INTEGER},
+      </if>
+      <if test="joinTime != null">
+        #{joinTime,jdbcType=DATE},
+      </if>
+      <if test="applyTime != null">
+        #{applyTime,jdbcType=DATE},
+      </if>
+      <if test="auth != null">
+        #{auth,jdbcType=INTEGER},
+      </if>
+      <if test="status != null">
+        #{status,jdbcType=INTEGER},
+      </if>
+      <if test="position != null">
+        #{position,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <select id="countByExample" parameterType="com.example.knw.pojo.JoinTeamExample" resultType="java.lang.Long">
+    select count(*) from join_team
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+  </select>
+  <update id="updateByExampleSelective" parameterType="map">
+    update join_team
+    <set>
+      <if test="record.joinId != null">
+        join_id = #{record.joinId,jdbcType=INTEGER},
+      </if>
+      <if test="record.joinUser != null">
+        join_user = #{record.joinUser,jdbcType=INTEGER},
+      </if>
+      <if test="record.teamId != null">
+        team_id = #{record.teamId,jdbcType=INTEGER},
+      </if>
+      <if test="record.joinTime != null">
+        join_time = #{record.joinTime,jdbcType=DATE},
+      </if>
+      <if test="record.applyTime != null">
+        apply_time = #{record.applyTime,jdbcType=DATE},
+      </if>
+      <if test="record.auth != null">
+        auth = #{record.auth,jdbcType=INTEGER},
+      </if>
+      <if test="record.status != null">
+        `status` = #{record.status,jdbcType=INTEGER},
+      </if>
+      <if test="record.position != null">
+        `position` = #{record.position,jdbcType=VARCHAR},
+      </if>
+    </set>
+    <if test="_parameter != null">
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExample" parameterType="map">
+    update join_team
+    set join_id = #{record.joinId,jdbcType=INTEGER},
+      join_user = #{record.joinUser,jdbcType=INTEGER},
+      team_id = #{record.teamId,jdbcType=INTEGER},
+      join_time = #{record.joinTime,jdbcType=DATE},
+      apply_time = #{record.applyTime,jdbcType=DATE},
+      auth = #{record.auth,jdbcType=INTEGER},
+      `status` = #{record.status,jdbcType=INTEGER},
+      `position` = #{record.position,jdbcType=VARCHAR}
+    <if test="_parameter != null">
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByPrimaryKeySelective" parameterType="com.example.knw.pojo.JoinTeam">
+    update join_team
+    <set>
+      <if test="joinUser != null">
+        join_user = #{joinUser,jdbcType=INTEGER},
+      </if>
+      <if test="teamId != null">
+        team_id = #{teamId,jdbcType=INTEGER},
+      </if>
+      <if test="joinTime != null">
+        join_time = #{joinTime,jdbcType=DATE},
+      </if>
+      <if test="applyTime != null">
+        apply_time = #{applyTime,jdbcType=DATE},
+      </if>
+      <if test="auth != null">
+        auth = #{auth,jdbcType=INTEGER},
+      </if>
+      <if test="status != null">
+        `status` = #{status,jdbcType=INTEGER},
+      </if>
+      <if test="position != null">
+        `position` = #{position,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where join_id = #{joinId,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.example.knw.pojo.JoinTeam">
+    update join_team
+    set join_user = #{joinUser,jdbcType=INTEGER},
+      team_id = #{teamId,jdbcType=INTEGER},
+      join_time = #{joinTime,jdbcType=DATE},
+      apply_time = #{applyTime,jdbcType=DATE},
+      auth = #{auth,jdbcType=INTEGER},
+      `status` = #{status,jdbcType=INTEGER},
+      `position` = #{position,jdbcType=VARCHAR}
+    where join_id = #{joinId,jdbcType=INTEGER}
+  </update>
+</mapper>
