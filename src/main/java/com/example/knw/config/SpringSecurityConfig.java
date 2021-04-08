@@ -63,13 +63,16 @@ public class SpringSecurityConfig extends WebSecurityConfigurerAdapter {
 
                 //登录界面和注册界面可以访问
                 .authorizeRequests()
-                .antMatchers(
-                        "/user/login",
-                        "/user/register")
-                .permitAll()
+//                .antMatchers(
+//                        "/user/login",
+//                        "/user/register",
+//                        "/user/verify")
+//                .permitAll()
 
                 //其他所有都需要权限
-                .anyRequest().authenticated()
+//                .anyRequest().authenticated()
+                //开发阶段都可以访问
+                .anyRequest().permitAll()
 
                 //加入异常处理
                 .and()

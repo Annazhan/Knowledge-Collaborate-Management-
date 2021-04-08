@@ -23,6 +23,8 @@ public enum ResultEnum {
     ALREADY_REGISTER(15, "已经注册"),
     ALREADY_LOGOUT(16, "已经退出"),
     ALREADY_LOGIN(17, "已经登录"),
+    CODE_INVALID(18, "验证码错误"),
+    INVALID_EMAIL(19, "非法邮箱"),
 
     UNKNOWN_FAIL(99, "未知错误，请求失败"),
     ;

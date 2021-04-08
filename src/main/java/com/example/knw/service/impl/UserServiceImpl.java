@@ -71,7 +71,6 @@ public class UserServiceImpl implements UserService, UserDetailsService {
         if(list.size() != 0){
             return true;
         }
-        user.setIsActive((byte)0);
         user.setRegisterTime(new Date());
         userMapper.insertSelective(user);
         return false;

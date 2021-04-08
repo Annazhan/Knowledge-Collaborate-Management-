@@ -7,7 +7,10 @@ import com.example.knw.pojo.KnwUser;
 import com.example.knw.result.Result;
 import com.example.knw.result.ResultEnum;
 import com.example.knw.service.UserService;
+import com.example.knw.service.impl.EmailService;
+import com.example.knw.utils.JsonUtils;
 import com.example.knw.utils.JwtTokenUtils;
+import com.fasterxml.jackson.core.JsonProcessingException;
 import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -32,30 +35,41 @@ import javax.servlet.http.HttpServletRequest;
  */
 @Controller
 @RequestMapping("/user")
+@Slf4j
 public class UserController {
 
-    private Logger logger = LoggerFactory.getLogger(UserController.class);
+    //private Logger logger = LoggerFactory.getLogger(UserController.class);
     @Autowired
     UserService userService;
 
     @Autowired
     JwtTokenUtils tokenUtils;
 
+    @Autowired
+    EmailService emailService;
+
+    @Autowired
+    JsonUtils json;
+
     @RequestMapping("/getUser")
     @ResponseBody
-    public Result getUser(@RequestParam Integer id) throws NoSuchUserException {
-        return new Result(userService.getUserByID(id));
+    public Result getUser(@RequestBody String jsonString)
+            throws NoSuchUserException, JsonProcessingException {
+        boolean isRemember = json.jsonString2Object(jsonString, "isRemember", Boolean.class);
+        KnwUser user = json.jsonString2Object(jsonString, "user", KnwUser.class);
+        log.info("get from requestBody "+isRemember);
+        return new Result(userService.getUserByID(user.getId()));
     }
 
     @PostMapping("/login")
     @ResponseBody
-    public Result login(@RequestHeader("Authorization") String authHeader,
-                        @RequestBody KnwUser user,
-                        boolean isRemember) throws NoSuchUserException{
-        logger.info("get isRemember from json:" + isRemember);
-        //logger.info(user.getEmail());
+    public Result login(@RequestHeader(value = "Authorization", required = false) String authHeader,
+                        @RequestBody String jsonString) throws NoSuchUserException, JsonProcessingException {
+        boolean isRemember = json.jsonString2Object(jsonString, "isRemember", Boolean.class);
+        KnwUser user = json.jsonString2Object(jsonString, "user", KnwUser.class);
+        log.info("get isRemember from json:" + isRemember);
+
         KnwUser knwUser = userService.getUserByObject(user);
-        //logger.info(knwUser.getId().toString());
         if(knwUser == null){
             return new Result(ResultEnum.FALSE_PASSWORD,null);
         }
@@ -68,27 +82,46 @@ public class UserController {
 
     @PostMapping("/register")
     @ResponseBody
-    public Result register(@RequestBody KnwUser user){
-        logger.info(user.toString());
-        boolean isRegister = userService.addUserToSystem(user);
+    public Result register(@RequestBody String jsonString) throws JsonProcessingException {
+        String code = json.jsonString2Object(jsonString, "code", String.class);
+        KnwUser user = json.jsonString2Object(jsonString,"user", KnwUser.class);
+
+        log.info(user.toString());
+        boolean isRegister = false;
+        if(emailService.checkVerifyCode(user.getEmail(), code)){
+            user.setIsActive((byte)1);
+            isRegister = userService.addUserToSystem(user);
+            return new Result(ResultEnum.SUCCESS_REGISTER, null);
+
+        }
         if(isRegister){
             return new Result(ResultEnum.ALREADY_REGISTER, null);
         }
-        else {
-            return new Result(ResultEnum.SUCCESS_REGISTER, null);
+        return new Result(ResultEnum.CODE_INVALID, null);
+    }
+
+    @PostMapping("/verify")
+    @ResponseBody
+    public Result verifyAccount(@RequestBody String jsonString) throws JsonProcessingException {
+        String email = json.jsonString2Object(jsonString, "email",String.class);
+
+        if(emailService.sendVerifyCode(email)){
+            return new Result(ResultEnum.SUCCESS, "发送邮件成功");
         }
+        throw new RuntimeException();
     }
 
     @PostMapping("/logout")
     @ResponseBody
-    public Result logout(HttpServletRequest httpServletRequest){
-        String tokenWithHeader = httpServletRequest.getHeader(tokenUtils.getHeader());
+    public Result logout(@RequestHeader(value = "Authorization", required = false)
+                                     String tokenWithHeader){
         boolean isLogout = false;
         if(tokenWithHeader != null && tokenWithHeader.startsWith(tokenUtils.getStart())){
             String token = tokenWithHeader.substring(tokenUtils.getStart().length());
             try{
                 isLogout = tokenUtils.deleteToken(token);
             }catch (Exception e){
+                e.printStackTrace();
                 return new Result(ResultEnum.ALREADY_LOGOUT,null);
             }
 
