@@ -1,6 +1,7 @@
 package com.example.knw.service;
 
 import com.example.knw.pojo.JoinTeam;
+import com.example.knw.utils.enumpackage.JoinInTeamStatusEnum;
 import com.example.knw.utils.enumpackage.PeopleAuthEnum;
 import org.springframework.security.core.GrantedAuthority;
 
@@ -17,7 +18,7 @@ public interface JoinTeamService {
     void applyToAddTeam(Integer userID, Integer teamID,String reason);
     Integer getUserAuth(Integer userID, Integer teamID);
     List<GrantedAuthority> getAuthByInteger(Integer auth);
-    boolean changeTeamMemberToOutStatus(Integer[] users);
+    boolean changeTeamMemberStatus(Integer teamID, Integer userID, JoinInTeamStatusEnum joinInTeamStatus);
     List<Object[]> getAllUserInTeamWithAuthority(Integer teamID);
     void changeUserAuthority(Integer teamID, Integer userID, Integer auth);
     boolean haveSameAuth(Integer teamID, Integer modifier, Integer userID, PeopleAuthEnum peopleAuth);

@@ -8,8 +8,10 @@ import com.example.knw.result.Result;
 import com.example.knw.result.ResultEnum;
 import com.example.knw.service.*;
 import com.example.knw.utils.JsonUtils;
+import com.example.knw.utils.enumpackage.JoinInTeamStatusEnum;
 import com.example.knw.utils.enumpackage.PeopleAuthEnum;
 import com.example.knw.utils.enumpackage.PositionInTeam;
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -182,13 +184,16 @@ public class TeamController {
         if(team != null && !teamService.updateTeamInfo(team)){
             return new Result(ResultEnum.UPDATE_TEAM_INFO_FAILURE, null);
         }
-        if(removeUsers != null && !joinTeamService.changeTeamMemberToOutStatus(removeUsers)){
+        if(removeUsers != null){
             for(Integer i: removeUsers){
                 if(joinTeamService.haveSameAuth(teamID, i, userID, PeopleAuthEnum.TEAM)){
                     response.sendError(HttpServletResponse.SC_FORBIDDEN, "user "+ i +" have same authority");
                 }
+                if(!joinTeamService.changeTeamMemberStatus(teamID, i, JoinInTeamStatusEnum.OUT)){
+                    return new Result(ResultEnum.TEAMMATES_STATUS_IS_CHANGED, i+" 之后的队员全部踢出失败");
+                }
             }
-            return new Result(ResultEnum.DELETE_TEAMMATES_FAILURE, null);
+
         }
         return new Result(ResultEnum.SUCCESS, null);
     }
@@ -229,6 +234,16 @@ public class TeamController {
         return new Result(ResultEnum.SUCCESS, null);
     }
 
+    @PostMapping("/quit")
+    public Result quitTeam(@RequestBody JsonNode node, Principal principal){
+        Integer userID = Integer.valueOf(principal.getName());
+        Integer teamID = node.get("teamId").asInt();
+        if(joinTeamService.changeTeamMemberStatus(teamID, userID, JoinInTeamStatusEnum.OUT)){
+            return new Result(ResultEnum.SUCCESS, null);
+        }
+        return new Result(ResultEnum.TEAMMATES_STATUS_IS_CHANGED, null);
+    }
+
     @PostMapping("/transfer")
     public Result transferTeamToOther(@RequestBody String jsonString, Principal principal) throws JsonProcessingException {
         Integer origin = Integer.valueOf(principal.getName());
@@ -259,7 +274,5 @@ public class TeamController {
 
         return new Result(ResultEnum.SUCCESS, null);
     }
-
-
 
 }

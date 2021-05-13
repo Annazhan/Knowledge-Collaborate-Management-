@@ -156,19 +156,23 @@ public class JoinTeamServiceImpl implements JoinTeamService{
     }
 
     @Override
-    public boolean changeTeamMemberToOutStatus(Integer[] users){
+    public boolean changeTeamMemberStatus(Integer teamID, Integer userID, JoinInTeamStatusEnum joinInTeamStatus){
         JoinTeamExample example = new JoinTeamExample();
         JoinTeamExample.Criteria criteria = example.createCriteria();
-        criteria.andJoinUserIn(Arrays.asList(users));
+        criteria.andJoinUserEqualTo(userID);
+        criteria.andTeamIdEqualTo(teamID);
 
-        JoinTeam join = new JoinTeam();
-        join.setStatus(JoinInTeamStatusEnum.OUT);
-
-        try {
+        List<JoinTeam> joins = joinTeamMapper.selectByExample(example);
+        if(joins.size() == 0){
+            throw new NoSuchUserException();
+        }
+        else{
+            if(joins.get(0).getStatus().equals(joinInTeamStatus)){
+                return false;
+            }
+            JoinTeam join = joins.get(0);
+            join.setStatus(joinInTeamStatus);
             joinTeamMapper.updateByExampleSelective(join, example);
-        }catch (Exception e){
-            e.printStackTrace();
-            return false;
         }
         return true;
     }

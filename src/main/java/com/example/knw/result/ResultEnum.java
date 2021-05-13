@@ -37,7 +37,7 @@ public enum ResultEnum {
     ALREADY_GET_INVITATION(27, "已经收到了邀请"),
     ALREADY_IN_TEAM(28, "已经加入团队中"),
     UPDATE_TEAM_INFO_FAILURE(29, "修改团队信息失败"),
-    DELETE_TEAMMATES_FAILURE(30, "踢出队员失败"),
+    TEAMMATES_STATUS_IS_CHANGED(30, "队员状态已经发生更改"),
     ALREADY_TEAM_LEADER(31, "已经是队长"),
 
     MSG_RELATED_FAILURE(40, "消息相关错误"),
