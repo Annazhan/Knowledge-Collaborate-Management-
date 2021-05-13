@@ -16,6 +16,8 @@ public class Msg implements Serializable {
 
     private Date sendTime;
 
+    private Boolean isread;
+
     private static final long serialVersionUID = 1L;
 
     public Integer getMsgId() {
@@ -66,6 +68,14 @@ public class Msg implements Serializable {
         this.sendTime = sendTime;
     }
 
+    public Boolean getIsread() {
+        return isread;
+    }
+
+    public void setIsread(Boolean isread) {
+        this.isread = isread;
+    }
+
     @Override
     public String toString() {
         StringBuilder sb = new StringBuilder();
@@ -78,6 +88,7 @@ public class Msg implements Serializable {
         sb.append(", sender=").append(sender);
         sb.append(", reciever=").append(reciever);
         sb.append(", sendTime=").append(sendTime);
+        sb.append(", isread=").append(isread);
         sb.append(", serialVersionUID=").append(serialVersionUID);
         sb.append("]");
         return sb.toString();

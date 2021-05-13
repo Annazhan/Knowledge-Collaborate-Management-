@@ -106,30 +106,30 @@ public class MsgExample {
             criteria.add(new Criterion(condition, value1, value2));
         }
 
-        protected void addCriterionForJDBCDate(String condition, Date value, String property) {
+        protected void addCriterionForJDBCTime(String condition, Date value, String property) {
             if (value == null) {
                 throw new RuntimeException("Value for " + property + " cannot be null");
             }
-            addCriterion(condition, new java.sql.Date(value.getTime()), property);
+            addCriterion(condition, new java.sql.Time(value.getTime()), property);
         }
 
-        protected void addCriterionForJDBCDate(String condition, List<Date> values, String property) {
+        protected void addCriterionForJDBCTime(String condition, List<Date> values, String property) {
             if (values == null || values.size() == 0) {
                 throw new RuntimeException("Value list for " + property + " cannot be null or empty");
             }
-            List<java.sql.Date> dateList = new ArrayList<java.sql.Date>();
+            List<java.sql.Time> timeList = new ArrayList<java.sql.Time>();
             Iterator<Date> iter = values.iterator();
             while (iter.hasNext()) {
-                dateList.add(new java.sql.Date(iter.next().getTime()));
+                timeList.add(new java.sql.Time(iter.next().getTime()));
             }
-            addCriterion(condition, dateList, property);
+            addCriterion(condition, timeList, property);
         }
 
-        protected void addCriterionForJDBCDate(String condition, Date value1, Date value2, String property) {
+        protected void addCriterionForJDBCTime(String condition, Date value1, Date value2, String property) {
             if (value1 == null || value2 == null) {
                 throw new RuntimeException("Between values for " + property + " cannot be null");
             }
-            addCriterion(condition, new java.sql.Date(value1.getTime()), new java.sql.Date(value2.getTime()), property);
+            addCriterion(condition, new java.sql.Time(value1.getTime()), new java.sql.Time(value2.getTime()), property);
         }
 
         public Criteria andMsgIdIsNull() {
@@ -473,52 +473,112 @@ public class MsgExample {
         }
 
         public Criteria andSendTimeEqualTo(Date value) {
-            addCriterionForJDBCDate("send_time =", value, "sendTime");
+            addCriterionForJDBCTime("send_time =", value, "sendTime");
             return (Criteria) this;
         }
 
         public Criteria andSendTimeNotEqualTo(Date value) {
-            addCriterionForJDBCDate("send_time <>", value, "sendTime");
+            addCriterionForJDBCTime("send_time <>", value, "sendTime");
             return (Criteria) this;
         }
 
         public Criteria andSendTimeGreaterThan(Date value) {
-            addCriterionForJDBCDate("send_time >", value, "sendTime");
+            addCriterionForJDBCTime("send_time >", value, "sendTime");
             return (Criteria) this;
         }
 
         public Criteria andSendTimeGreaterThanOrEqualTo(Date value) {
-            addCriterionForJDBCDate("send_time >=", value, "sendTime");
+            addCriterionForJDBCTime("send_time >=", value, "sendTime");
             return (Criteria) this;
         }
 
         public Criteria andSendTimeLessThan(Date value) {
-            addCriterionForJDBCDate("send_time <", value, "sendTime");
+            addCriterionForJDBCTime("send_time <", value, "sendTime");
             return (Criteria) this;
         }
 
         public Criteria andSendTimeLessThanOrEqualTo(Date value) {
-            addCriterionForJDBCDate("send_time <=", value, "sendTime");
+            addCriterionForJDBCTime("send_time <=", value, "sendTime");
             return (Criteria) this;
         }
 
         public Criteria andSendTimeIn(List<Date> values) {
-            addCriterionForJDBCDate("send_time in", values, "sendTime");
+            addCriterionForJDBCTime("send_time in", values, "sendTime");
             return (Criteria) this;
         }
 
         public Criteria andSendTimeNotIn(List<Date> values) {
-            addCriterionForJDBCDate("send_time not in", values, "sendTime");
+            addCriterionForJDBCTime("send_time not in", values, "sendTime");
             return (Criteria) this;
         }
 
         public Criteria andSendTimeBetween(Date value1, Date value2) {
-            addCriterionForJDBCDate("send_time between", value1, value2, "sendTime");
+            addCriterionForJDBCTime("send_time between", value1, value2, "sendTime");
             return (Criteria) this;
         }
 
         public Criteria andSendTimeNotBetween(Date value1, Date value2) {
-            addCriterionForJDBCDate("send_time not between", value1, value2, "sendTime");
+            addCriterionForJDBCTime("send_time not between", value1, value2, "sendTime");
+            return (Criteria) this;
+        }
+
+        public Criteria andIsreadIsNull() {
+            addCriterion("isRead is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andIsreadIsNotNull() {
+            addCriterion("isRead is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andIsreadEqualTo(Boolean value) {
+            addCriterion("isRead =", value, "isread");
+            return (Criteria) this;
+        }
+
+        public Criteria andIsreadNotEqualTo(Boolean value) {
+            addCriterion("isRead <>", value, "isread");
+            return (Criteria) this;
+        }
+
+        public Criteria andIsreadGreaterThan(Boolean value) {
+            addCriterion("isRead >", value, "isread");
+            return (Criteria) this;
+        }
+
+        public Criteria andIsreadGreaterThanOrEqualTo(Boolean value) {
+            addCriterion("isRead >=", value, "isread");
+            return (Criteria) this;
+        }
+
+        public Criteria andIsreadLessThan(Boolean value) {
+            addCriterion("isRead <", value, "isread");
+            return (Criteria) this;
+        }
+
+        public Criteria andIsreadLessThanOrEqualTo(Boolean value) {
+            addCriterion("isRead <=", value, "isread");
+            return (Criteria) this;
+        }
+
+        public Criteria andIsreadIn(List<Boolean> values) {
+            addCriterion("isRead in", values, "isread");
+            return (Criteria) this;
+        }
+
+        public Criteria andIsreadNotIn(List<Boolean> values) {
+            addCriterion("isRead not in", values, "isread");
+            return (Criteria) this;
+        }
+
+        public Criteria andIsreadBetween(Boolean value1, Boolean value2) {
+            addCriterion("isRead between", value1, value2, "isread");
+            return (Criteria) this;
+        }
+
+        public Criteria andIsreadNotBetween(Boolean value1, Boolean value2) {
+            addCriterion("isRead not between", value1, value2, "isread");
             return (Criteria) this;
         }
     }

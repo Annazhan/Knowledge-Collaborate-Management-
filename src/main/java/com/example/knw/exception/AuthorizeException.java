@@ -9,7 +9,7 @@ import com.example.knw.result.ResultEnum;
  * @date 2021-03-30
  */
 public class AuthorizeException extends DefineException {
-    public AuthorizeException() {
-        super(ResultEnum.AUTHORIZE_FAILURE);
+    public AuthorizeException(ResultEnum resultEnum) {
+        super(resultEnum);
     }
 }

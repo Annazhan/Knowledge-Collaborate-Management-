@@ -2,12 +2,9 @@ package com.example.knw.config;
 
 import com.example.knw.handler.AuthenticationFailureHandler;
 import com.example.knw.handler.JwtAccessDeniedHandler;
-import com.example.knw.handler.JwtRequestHandler;
-import com.example.knw.service.UserService;
+import com.example.knw.handler.JwtRequestFilterHandler;
 import com.example.knw.service.impl.UserServiceImpl;
-import com.example.knw.utils.JwtTokenUtils;
 import com.example.knw.utils.TokenManagement;
-import org.apache.tomcat.util.net.openssl.ciphers.Authentication;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Configuration;
@@ -19,7 +16,6 @@ import org.springframework.security.config.annotation.web.configuration.WebSecur
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.crypto.password.Pbkdf2PasswordEncoder;
-import org.springframework.security.web.AuthenticationEntryPoint;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 /**
@@ -42,7 +38,7 @@ public class SpringSecurityConfig extends WebSecurityConfigurerAdapter {
     JwtAccessDeniedHandler adHandler;
 
     @Autowired
-    JwtRequestHandler jwtRequestHandler;
+    JwtRequestFilterHandler jwtRequestFilterHandler;
 
     @Autowired
     UserServiceImpl userService;
@@ -57,22 +53,36 @@ public class SpringSecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Override
     protected void configure(HttpSecurity httpSecurity) throws Exception {
+        //设置跨域策略
         httpSecurity
-                //由于自定义了token，所以不需要
                 .csrf().disable()
 
                 //登录界面和注册界面可以访问
                 .authorizeRequests()
-//                .antMatchers(
-//                        "/user/login",
-//                        "/user/register",
-//                        "/user/verify")
-//                .permitAll()
+
+                .antMatchers(
+                        "/user/login",
+                        "/user/register",
+                        "/user/verify",
+                        "/user/changePassword")
+                .permitAll()
+
+
+                .antMatchers(
+                        "/team/addMember",
+                        "/team/editTeam").hasAuthority("TEAM")
+
+                .antMatchers("/team/createProject").hasAuthority("PROGRAM")
+
+                .antMatchers(
+                        "/team/getAuthority",
+                        "/team/editAuthority",
+                        "/team/createRole").hasAuthority("AUTH")
+
+                .antMatchers("/team/transfer").hasAuthority("KPI")
 
                 //其他所有都需要权限
-//                .anyRequest().authenticated()
-                //开发阶段都可以访问
-                .anyRequest().permitAll()
+                .anyRequest().authenticated()
 
                 //加入异常处理
                 .and()
@@ -84,7 +94,7 @@ public class SpringSecurityConfig extends WebSecurityConfigurerAdapter {
                 .and().sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
 
                 //设置jwt过滤器，使得每一次请求都经过token验证
-                .and().addFilterBefore(jwtRequestHandler, UsernamePasswordAuthenticationFilter.class);
+                .and().addFilterBefore(jwtRequestFilterHandler, UsernamePasswordAuthenticationFilter.class);
 
 
     }

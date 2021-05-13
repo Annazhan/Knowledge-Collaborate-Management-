@@ -1,5 +1,8 @@
 package com.example.knw.pojo;
 
+import com.example.knw.utils.enumpackage.UserLevelEnum;
+import com.example.knw.utils.enumpackage.UserStatusEnum;
+
 import java.io.Serializable;
 import java.util.Date;
 
@@ -18,7 +21,7 @@ public class KnwUser implements Serializable {
 
     private String password;
 
-    private Short status;
+    private UserStatusEnum status;
 
     private Byte isActive;
 
@@ -27,6 +30,8 @@ public class KnwUser implements Serializable {
     private String intro;
 
     private String knwWeixin;
+
+    private UserLevelEnum level;
 
     private static final long serialVersionUID = 1L;
 
@@ -86,11 +91,11 @@ public class KnwUser implements Serializable {
         this.password = password == null ? null : password.trim();
     }
 
-    public Short getStatus() {
+    public UserStatusEnum getStatus() {
         return status;
     }
 
-    public void setStatus(Short status) {
+    public void setStatus(UserStatusEnum status) {
         this.status = status;
     }
 
@@ -126,6 +131,14 @@ public class KnwUser implements Serializable {
         this.knwWeixin = knwWeixin == null ? null : knwWeixin.trim();
     }
 
+    public UserLevelEnum getLevel() {
+        return level;
+    }
+
+    public void setLevel(UserLevelEnum level) {
+        this.level = level;
+    }
+
     @Override
     public String toString() {
         StringBuilder sb = new StringBuilder();
@@ -144,6 +157,7 @@ public class KnwUser implements Serializable {
         sb.append(", registerTime=").append(registerTime);
         sb.append(", intro=").append(intro);
         sb.append(", knwWeixin=").append(knwWeixin);
+        sb.append(", level=").append(level);
         sb.append(", serialVersionUID=").append(serialVersionUID);
         sb.append("]");
         return sb.toString();

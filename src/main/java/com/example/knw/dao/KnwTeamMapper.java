@@ -18,15 +18,23 @@ public interface KnwTeamMapper {
 
     int insertSelective(KnwTeam record);
 
+    List<KnwTeam> selectByExampleWithBLOBs(KnwTeamExample example);
+
     List<KnwTeam> selectByExample(KnwTeamExample example);
 
     KnwTeam selectByPrimaryKey(Integer teamId);
 
+    Integer selectLastTeamID();
+
     int updateByExampleSelective(@Param("record") KnwTeam record, @Param("example") KnwTeamExample example);
+
+    int updateByExampleWithBLOBs(@Param("record") KnwTeam record, @Param("example") KnwTeamExample example);
 
     int updateByExample(@Param("record") KnwTeam record, @Param("example") KnwTeamExample example);
 
     int updateByPrimaryKeySelective(KnwTeam record);
+
+    int updateByPrimaryKeyWithBLOBs(KnwTeam record);
 
     int updateByPrimaryKey(KnwTeam record);
 }

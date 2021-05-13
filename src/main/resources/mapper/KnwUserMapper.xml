@@ -14,6 +14,7 @@
     <result column="register_time" jdbcType="DATE" property="registerTime" />
     <result column="intro" jdbcType="VARCHAR" property="intro" />
     <result column="knw_weixin" jdbcType="VARCHAR" property="knwWeixin" />
+    <result column="level" jdbcType="TINYINT" property="level" />
   </resultMap>
   <sql id="Example_Where_Clause">
     <where>
@@ -75,7 +76,7 @@
   </sql>
   <sql id="Base_Column_List">
     id, user_name, actual_name, sex, email, phone, `password`, `status`, is_active, register_time, 
-    intro, knw_weixin
+    intro, knw_weixin, `level`
   </sql>
   <select id="selectByExample" parameterType="com.example.knw.pojo.KnwUserExample" resultMap="BaseResultMap">
     select
@@ -111,13 +112,13 @@
     insert into knw_user (id, user_name, actual_name, 
       sex, email, phone, 
       `password`, `status`, is_active, 
-      register_time, intro, knw_weixin
-      )
+      register_time, intro, knw_weixin, 
+      `level`)
     values (#{id,jdbcType=INTEGER}, #{userName,jdbcType=VARCHAR}, #{actualName,jdbcType=VARCHAR}, 
       #{sex,jdbcType=TINYINT}, #{email,jdbcType=VARCHAR}, #{phone,jdbcType=VARCHAR}, 
       #{password,jdbcType=VARCHAR}, #{status,jdbcType=SMALLINT}, #{isActive,jdbcType=TINYINT}, 
-      #{registerTime,jdbcType=DATE}, #{intro,jdbcType=VARCHAR}, #{knwWeixin,jdbcType=VARCHAR}
-      )
+      #{registerTime,jdbcType=DATE}, #{intro,jdbcType=VARCHAR}, #{knwWeixin,jdbcType=VARCHAR}, 
+      #{level,jdbcType=TINYINT})
   </insert>
   <insert id="insertSelective" parameterType="com.example.knw.pojo.KnwUser">
     insert into knw_user
@@ -158,6 +159,9 @@
       <if test="knwWeixin != null">
         knw_weixin,
       </if>
+      <if test="level != null">
+        `level`,
+      </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides=",">
       <if test="id != null">
@@ -195,6 +199,9 @@
       </if>
       <if test="knwWeixin != null">
         #{knwWeixin,jdbcType=VARCHAR},
+      </if>
+      <if test="level != null">
+        #{level,jdbcType=TINYINT},
       </if>
     </trim>
   </insert>
@@ -243,6 +250,9 @@
       <if test="record.knwWeixin != null">
         knw_weixin = #{record.knwWeixin,jdbcType=VARCHAR},
       </if>
+      <if test="record.level != null">
+        `level` = #{record.level,jdbcType=TINYINT},
+      </if>
     </set>
     <if test="_parameter != null">
       <include refid="Update_By_Example_Where_Clause" />
@@ -261,7 +271,8 @@
       is_active = #{record.isActive,jdbcType=TINYINT},
       register_time = #{record.registerTime,jdbcType=DATE},
       intro = #{record.intro,jdbcType=VARCHAR},
-      knw_weixin = #{record.knwWeixin,jdbcType=VARCHAR}
+      knw_weixin = #{record.knwWeixin,jdbcType=VARCHAR},
+      `level` = #{record.level,jdbcType=TINYINT}
     <if test="_parameter != null">
       <include refid="Update_By_Example_Where_Clause" />
     </if>
@@ -302,6 +313,9 @@
       <if test="knwWeixin != null">
         knw_weixin = #{knwWeixin,jdbcType=VARCHAR},
       </if>
+      <if test="level != null">
+        `level` = #{level,jdbcType=TINYINT},
+      </if>
     </set>
     where id = #{id,jdbcType=INTEGER}
   </update>
@@ -317,7 +331,8 @@
       is_active = #{isActive,jdbcType=TINYINT},
       register_time = #{registerTime,jdbcType=DATE},
       intro = #{intro,jdbcType=VARCHAR},
-      knw_weixin = #{knwWeixin,jdbcType=VARCHAR}
+      knw_weixin = #{knwWeixin,jdbcType=VARCHAR},
+      `level` = #{level,jdbcType=TINYINT}
     where id = #{id,jdbcType=INTEGER}
   </update>
 </mapper>

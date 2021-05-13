@@ -5,11 +5,12 @@
     <id column="join_id" jdbcType="INTEGER" property="joinId" />
     <result column="join_user" jdbcType="INTEGER" property="joinUser" />
     <result column="team_id" jdbcType="INTEGER" property="teamId" />
-    <result column="join_time" jdbcType="DATE" property="joinTime" />
-    <result column="apply_time" jdbcType="DATE" property="applyTime" />
+    <result column="join_time" jdbcType="TIMESTAMP" property="joinTime" />
+    <result column="apply_time" jdbcType="TIMESTAMP" property="applyTime" />
     <result column="auth" jdbcType="INTEGER" property="auth" />
     <result column="status" jdbcType="INTEGER" property="status" />
     <result column="position" jdbcType="VARCHAR" property="position" />
+    <result column="join_team_reason" jdbcType="VARCHAR" property="joinTeamReason" />
   </resultMap>
   <sql id="Example_Where_Clause">
     <where>
@@ -70,7 +71,7 @@
     </where>
   </sql>
   <sql id="Base_Column_List">
-    join_id, join_user, team_id, join_time, apply_time, auth, `status`, `position`
+    join_id, join_user, team_id, join_time, apply_time, auth, `status`, `position`, join_team_reason
   </sql>
   <select id="selectByExample" parameterType="com.example.knw.pojo.JoinTeamExample" resultMap="BaseResultMap">
     select
@@ -78,6 +79,34 @@
       distinct
     </if>
     <include refid="Base_Column_List" />
+    from join_team
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null">
+      order by ${orderByClause}
+    </if>
+  </select>
+  <select id="selectTeamIDByExample" parameterType="com.example.knw.pojo.JoinTeamExample" resultType="Integer">
+    select
+    <if test="distinct">
+      distinct
+    </if>
+    team_id
+    from join_team
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null">
+      order by ${orderByClause}
+    </if>
+  </select>
+  <select id="selectUserIDByExample" parameterType="com.example.knw.pojo.JoinTeamExample" resultType="Integer">
+    select
+    <if test="distinct">
+      distinct
+    </if>
+    join_user
     from join_team
     <if test="_parameter != null">
       <include refid="Example_Where_Clause" />
@@ -105,10 +134,12 @@
   <insert id="insert" parameterType="com.example.knw.pojo.JoinTeam">
     insert into join_team (join_id, join_user, team_id, 
       join_time, apply_time, auth, 
-      `status`, `position`)
+      `status`, `position`, join_team_reason
+      )
     values (#{joinId,jdbcType=INTEGER}, #{joinUser,jdbcType=INTEGER}, #{teamId,jdbcType=INTEGER}, 
-      #{joinTime,jdbcType=DATE}, #{applyTime,jdbcType=DATE}, #{auth,jdbcType=INTEGER}, 
-      #{status,jdbcType=INTEGER}, #{position,jdbcType=VARCHAR})
+      #{joinTime,jdbcType=TIMESTAMP}, #{applyTime,jdbcType=TIMESTAMP}, #{auth,jdbcType=INTEGER}, 
+      #{status,jdbcType=INTEGER}, #{position,jdbcType=VARCHAR}, #{joinTeamReason,jdbcType=VARCHAR}
+      )
   </insert>
   <insert id="insertSelective" parameterType="com.example.knw.pojo.JoinTeam">
     insert into join_team
@@ -137,6 +168,9 @@
       <if test="position != null">
         `position`,
       </if>
+      <if test="joinTeamReason != null">
+        join_team_reason,
+      </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides=",">
       <if test="joinId != null">
@@ -149,10 +183,10 @@
         #{teamId,jdbcType=INTEGER},
       </if>
       <if test="joinTime != null">
-        #{joinTime,jdbcType=DATE},
+        #{joinTime,jdbcType=TIMESTAMP},
       </if>
       <if test="applyTime != null">
-        #{applyTime,jdbcType=DATE},
+        #{applyTime,jdbcType=TIMESTAMP},
       </if>
       <if test="auth != null">
         #{auth,jdbcType=INTEGER},
@@ -162,6 +196,9 @@
       </if>
       <if test="position != null">
         #{position,jdbcType=VARCHAR},
+      </if>
+      <if test="joinTeamReason != null">
+        #{joinTeamReason,jdbcType=VARCHAR},
       </if>
     </trim>
   </insert>
@@ -184,10 +221,10 @@
         team_id = #{record.teamId,jdbcType=INTEGER},
       </if>
       <if test="record.joinTime != null">
-        join_time = #{record.joinTime,jdbcType=DATE},
+        join_time = #{record.joinTime,jdbcType=TIMESTAMP},
       </if>
       <if test="record.applyTime != null">
-        apply_time = #{record.applyTime,jdbcType=DATE},
+        apply_time = #{record.applyTime,jdbcType=TIMESTAMP},
       </if>
       <if test="record.auth != null">
         auth = #{record.auth,jdbcType=INTEGER},
@@ -197,6 +234,9 @@
       </if>
       <if test="record.position != null">
         `position` = #{record.position,jdbcType=VARCHAR},
+      </if>
+      <if test="record.joinTeamReason != null">
+        join_team_reason = #{record.joinTeamReason,jdbcType=VARCHAR},
       </if>
     </set>
     <if test="_parameter != null">
@@ -208,11 +248,12 @@
     set join_id = #{record.joinId,jdbcType=INTEGER},
       join_user = #{record.joinUser,jdbcType=INTEGER},
       team_id = #{record.teamId,jdbcType=INTEGER},
-      join_time = #{record.joinTime,jdbcType=DATE},
-      apply_time = #{record.applyTime,jdbcType=DATE},
+      join_time = #{record.joinTime,jdbcType=TIMESTAMP},
+      apply_time = #{record.applyTime,jdbcType=TIMESTAMP},
       auth = #{record.auth,jdbcType=INTEGER},
       `status` = #{record.status,jdbcType=INTEGER},
-      `position` = #{record.position,jdbcType=VARCHAR}
+      `position` = #{record.position,jdbcType=VARCHAR},
+      join_team_reason = #{record.joinTeamReason,jdbcType=VARCHAR}
     <if test="_parameter != null">
       <include refid="Update_By_Example_Where_Clause" />
     </if>
@@ -227,10 +268,10 @@
         team_id = #{teamId,jdbcType=INTEGER},
       </if>
       <if test="joinTime != null">
-        join_time = #{joinTime,jdbcType=DATE},
+        join_time = #{joinTime,jdbcType=TIMESTAMP},
       </if>
       <if test="applyTime != null">
-        apply_time = #{applyTime,jdbcType=DATE},
+        apply_time = #{applyTime,jdbcType=TIMESTAMP},
       </if>
       <if test="auth != null">
         auth = #{auth,jdbcType=INTEGER},
@@ -241,6 +282,9 @@
       <if test="position != null">
         `position` = #{position,jdbcType=VARCHAR},
       </if>
+      <if test="joinTeamReason != null">
+        join_team_reason = #{joinTeamReason,jdbcType=VARCHAR},
+      </if>
     </set>
     where join_id = #{joinId,jdbcType=INTEGER}
   </update>
@@ -248,11 +292,12 @@
     update join_team
     set join_user = #{joinUser,jdbcType=INTEGER},
       team_id = #{teamId,jdbcType=INTEGER},
-      join_time = #{joinTime,jdbcType=DATE},
-      apply_time = #{applyTime,jdbcType=DATE},
+      join_time = #{joinTime,jdbcType=TIMESTAMP},
+      apply_time = #{applyTime,jdbcType=TIMESTAMP},
       auth = #{auth,jdbcType=INTEGER},
       `status` = #{status,jdbcType=INTEGER},
-      `position` = #{position,jdbcType=VARCHAR}
+      `position` = #{position,jdbcType=VARCHAR},
+      join_team_reason = #{joinTeamReason,jdbcType=VARCHAR}
     where join_id = #{joinId,jdbcType=INTEGER}
   </update>
 </mapper>

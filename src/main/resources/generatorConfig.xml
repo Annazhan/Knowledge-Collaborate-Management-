@@ -60,10 +60,11 @@
 <!--        <table tableName="msg"></table>-->
 <!--        <table tableName="knw_user"></table>-->
 <!--        <table tableName="knw_team"></table>-->
-        <table tableName="knw_team"></table>
+<!--        <table tableName="knw_team"></table>-->
         <table tableName="join_team"></table>
-        <table tableName="msg"></table>
+<!--        <table tableName="msg"></table>-->
 <!--        <table tableName="knw_user"></table>-->
+<!--        <table tableName="project"></table>-->
 
     </context>
 </generatorConfiguration>

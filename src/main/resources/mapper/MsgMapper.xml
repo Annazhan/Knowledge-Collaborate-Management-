@@ -7,7 +7,8 @@
     <result column="type" jdbcType="CHAR" property="type" />
     <result column="sender" jdbcType="INTEGER" property="sender" />
     <result column="reciever" jdbcType="VARCHAR" property="reciever" />
-    <result column="send_time" jdbcType="DATE" property="sendTime" />
+    <result column="send_time" jdbcType="TIMESTAMP" property="sendTime" />
+    <result column="isRead" jdbcType="BIT" property="isread" />
   </resultMap>
   <sql id="Example_Where_Clause">
     <where>
@@ -68,7 +69,7 @@
     </where>
   </sql>
   <sql id="Base_Column_List">
-    msg_id, content, `type`, sender, reciever, send_time
+    msg_id, content, `type`, sender, reciever, send_time, isRead
   </sql>
   <select id="selectByExample" parameterType="com.example.knw.pojo.MsgExample" resultMap="BaseResultMap">
     select
@@ -102,11 +103,11 @@
   </delete>
   <insert id="insert" parameterType="com.example.knw.pojo.Msg">
     insert into msg (msg_id, content, `type`, 
-      sender, reciever, send_time
-      )
+      sender, reciever, send_time, 
+      isRead)
     values (#{msgId,jdbcType=INTEGER}, #{content,jdbcType=VARCHAR}, #{type,jdbcType=CHAR}, 
-      #{sender,jdbcType=INTEGER}, #{reciever,jdbcType=VARCHAR}, #{sendTime,jdbcType=DATE}
-      )
+      #{sender,jdbcType=INTEGER}, #{reciever,jdbcType=VARCHAR}, #{sendTime,jdbcType=TIMESTAMP},
+      #{isread,jdbcType=BIT})
   </insert>
   <insert id="insertSelective" parameterType="com.example.knw.pojo.Msg">
     insert into msg
@@ -129,6 +130,9 @@
       <if test="sendTime != null">
         send_time,
       </if>
+      <if test="isread != null">
+        isRead,
+      </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides=",">
       <if test="msgId != null">
@@ -147,7 +151,10 @@
         #{reciever,jdbcType=VARCHAR},
       </if>
       <if test="sendTime != null">
-        #{sendTime,jdbcType=DATE},
+        #{sendTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="isread != null">
+        #{isread,jdbcType=BIT},
       </if>
     </trim>
   </insert>
@@ -176,7 +183,10 @@
         reciever = #{record.reciever,jdbcType=VARCHAR},
       </if>
       <if test="record.sendTime != null">
-        send_time = #{record.sendTime,jdbcType=DATE},
+        send_time = #{record.sendTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="record.isread != null">
+        isRead = #{record.isread,jdbcType=BIT},
       </if>
     </set>
     <if test="_parameter != null">
@@ -190,7 +200,8 @@
       `type` = #{record.type,jdbcType=CHAR},
       sender = #{record.sender,jdbcType=INTEGER},
       reciever = #{record.reciever,jdbcType=VARCHAR},
-      send_time = #{record.sendTime,jdbcType=DATE}
+      send_time = #{record.sendTime,jdbcType=TIMESTAMP},
+      isRead = #{record.isread,jdbcType=BIT}
     <if test="_parameter != null">
       <include refid="Update_By_Example_Where_Clause" />
     </if>
@@ -211,7 +222,10 @@
         reciever = #{reciever,jdbcType=VARCHAR},
       </if>
       <if test="sendTime != null">
-        send_time = #{sendTime,jdbcType=DATE},
+        send_time = #{sendTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="isread != null">
+        isRead = #{isread,jdbcType=BIT},
       </if>
     </set>
     where msg_id = #{msgId,jdbcType=INTEGER}
@@ -222,7 +236,8 @@
       `type` = #{type,jdbcType=CHAR},
       sender = #{sender,jdbcType=INTEGER},
       reciever = #{reciever,jdbcType=VARCHAR},
-      send_time = #{sendTime,jdbcType=DATE}
+      send_time = #{sendTime,jdbcType=TIMESTAMP},
+      isRead = #{isread,jdbcType=BIT}
     where msg_id = #{msgId,jdbcType=INTEGER}
   </update>
 </mapper>

@@ -1,5 +1,7 @@
 package com.example.knw.pojo;
 
+import com.example.knw.utils.enumpackage.JoinInTeamStatusEnum;
+
 import java.io.Serializable;
 import java.util.Date;
 
@@ -16,11 +18,15 @@ public class JoinTeam implements Serializable {
 
     private Integer auth;
 
-    private Integer status;
+    private JoinInTeamStatusEnum status;
 
     private String position;
 
+    private String joinTeamReason;
+
     private static final long serialVersionUID = 1L;
+
+    public static final long EXPIRE_DAY = 7;
 
     public Integer getJoinId() {
         return joinId;
@@ -70,11 +76,11 @@ public class JoinTeam implements Serializable {
         this.auth = auth;
     }
 
-    public Integer getStatus() {
+    public JoinInTeamStatusEnum getStatus() {
         return status;
     }
 
-    public void setStatus(Integer status) {
+    public void setStatus(JoinInTeamStatusEnum status) {
         this.status = status;
     }
 
@@ -84,6 +90,14 @@ public class JoinTeam implements Serializable {
 
     public void setPosition(String position) {
         this.position = position == null ? null : position.trim();
+    }
+
+    public String getJoinTeamReason() {
+        return joinTeamReason;
+    }
+
+    public void setJoinTeamReason(String joinTeamReason) {
+        this.joinTeamReason = joinTeamReason == null ? null : joinTeamReason.trim();
     }
 
     @Override
@@ -100,6 +114,7 @@ public class JoinTeam implements Serializable {
         sb.append(", auth=").append(auth);
         sb.append(", status=").append(status);
         sb.append(", position=").append(position);
+        sb.append(", joinTeamReason=").append(joinTeamReason);
         sb.append(", serialVersionUID=").append(serialVersionUID);
         sb.append("]");
         return sb.toString();

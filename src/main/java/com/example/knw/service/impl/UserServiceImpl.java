@@ -6,6 +6,7 @@ import com.example.knw.pojo.KnwUser;
 import com.example.knw.pojo.KnwUserExample;
 import com.example.knw.service.UserService;
 import com.example.knw.utils.JwtTokenUtils;
+import com.example.knw.utils.enumpackage.UserLevelEnum;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -42,11 +43,11 @@ public class UserServiceImpl implements UserService, UserDetailsService {
             throw new NoSuchUserException();
         }
 
-        return userMapper.selectByPrimaryKey(id);
+        return user;
     }
 
     @Override
-    public KnwUser getUserByObject(KnwUser user) throws NoSuchUserException{
+    public KnwUser getUserByEmailAndPassword(KnwUser user) throws NoSuchUserException{
         KnwUserExample example = new KnwUserExample();
         KnwUserExample.Criteria criteria = example.createCriteria();
         criteria.andEmailEqualTo(user.getEmail());
@@ -63,6 +64,18 @@ public class UserServiceImpl implements UserService, UserDetailsService {
     }
 
     @Override
+    public KnwUser getUserByEmail(String email){
+        KnwUserExample example = new KnwUserExample();
+        KnwUserExample.Criteria criteria = example.createCriteria();
+        criteria.andEmailEqualTo(email);
+        List<KnwUser> list = userMapper.selectByExample(example);
+        if(list.size() == 0) {
+            throw new NoSuchUserException();
+        }
+        return list.get(0);
+    }
+
+    @Override
     public boolean addUserToSystem(KnwUser user){
         KnwUserExample example = new KnwUserExample();
         KnwUserExample.Criteria criteria = example.createCriteria();
@@ -72,8 +85,28 @@ public class UserServiceImpl implements UserService, UserDetailsService {
             return true;
         }
         user.setRegisterTime(new Date());
+        user.setLevel(UserLevelEnum.INDIVIDUAL);
+        user.setIsActive((byte)1);
         userMapper.insertSelective(user);
         return false;
+    }
+
+    @Override
+    public void updateUserInfo(KnwUser user) throws NoSuchUserException{
+        KnwUser knwUser = null;
+        if(user.getId()==null && user.getEmail()!=null){
+            knwUser = getUserByEmail(user.getEmail());
+        }
+        else if(user.getId()!=null){
+            knwUser = userMapper.selectByPrimaryKey(user.getId());
+        }
+        if(knwUser==null){
+            throw new NoSuchUserException();
+        }
+        else{
+            user.setId(knwUser.getId());
+            userMapper.updateByPrimaryKeySelective(user);
+        }
     }
 
     @Override
@@ -83,4 +116,23 @@ public class UserServiceImpl implements UserService, UserDetailsService {
         authorities.add(new SimpleGrantedAuthority("ROLE_USER"));
         return new User(user.getId().toString(), user.getPassword(),authorities);
     }
+
+    @Override
+    public List<KnwUser> relativeKnwUser(String email){
+        KnwUserExample example = new KnwUserExample();
+        KnwUserExample.Criteria criteria = example.createCriteria();
+        criteria.andEmailLike(email);
+        List<KnwUser> list= userMapper.selectByExample(example);
+
+        for(KnwUser user : list){
+            user.setPassword(null);
+        }
+        return list;
+    }
+
+    @Override
+    public String getUserName(Integer leaderID){
+        return userMapper.selectByPrimaryKey(leaderID).getActualName();
+    }
+
 }

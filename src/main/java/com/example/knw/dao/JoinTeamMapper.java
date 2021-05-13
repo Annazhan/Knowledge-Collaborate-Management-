@@ -20,6 +20,10 @@ public interface JoinTeamMapper {
 
     List<JoinTeam> selectByExample(JoinTeamExample example);
 
+    List<Integer> selectTeamIDByExample(JoinTeamExample example);
+
+    List<Integer> selectUserIDByExample(JoinTeamExample example);
+
     JoinTeam selectByPrimaryKey(Integer joinId);
 
     int updateByExampleSelective(@Param("record") JoinTeam record, @Param("example") JoinTeamExample example);

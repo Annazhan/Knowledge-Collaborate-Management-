@@ -1,5 +1,7 @@
 package com.example.knw.pojo;
 
+import com.example.knw.utils.enumpackage.PositionInTeam;
+
 import java.io.Serializable;
 import java.util.Date;
 
@@ -21,6 +23,8 @@ public class KnwTeam implements Serializable {
     private Float resourceSize;
 
     private Float usedSize;
+
+    private PositionInTeam positionName;
 
     private static final long serialVersionUID = 1L;
 
@@ -96,6 +100,14 @@ public class KnwTeam implements Serializable {
         this.usedSize = usedSize;
     }
 
+    public PositionInTeam getPositionName() {
+        return positionName;
+    }
+
+    public void setPositionName(PositionInTeam positionName) {
+        this.positionName = positionName == null ? null : positionName;
+    }
+
     @Override
     public String toString() {
         StringBuilder sb = new StringBuilder();
@@ -111,6 +123,7 @@ public class KnwTeam implements Serializable {
         sb.append(", institute=").append(institute);
         sb.append(", resourceSize=").append(resourceSize);
         sb.append(", usedSize=").append(usedSize);
+        sb.append(", positionName=").append(positionName);
         sb.append(", serialVersionUID=").append(serialVersionUID);
         sb.append("]");
         return sb.toString();

@@ -4,6 +4,8 @@ import com.auth0.jwt.exceptions.TokenExpiredException;
 import com.example.knw.exception.DefineException;
 import com.example.knw.result.Result;
 import com.example.knw.result.ResultEnum;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.exc.MismatchedInputException;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -25,6 +27,12 @@ public class GlobalExceptionHandler {
     @ResponseBody
     public Result tokenExpire(){
         return new Result(ResultEnum.TOKEN_EXPIRE, null);
+    }
+
+    @ExceptionHandler(value = MismatchedInputException.class)
+    @ResponseBody
+    public Result noneJsonString(){
+        return new Result(ResultEnum.NONE_JSON_FIELD, "null");
     }
 
     @ExceptionHandler(value = DefineException.class)

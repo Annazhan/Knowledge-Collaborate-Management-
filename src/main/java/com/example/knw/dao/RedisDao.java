@@ -7,6 +7,7 @@ import org.springframework.stereotype.Repository;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.TimeUnit;
 
 /**
  * Redis存邮箱验证码
@@ -15,16 +16,15 @@ import java.util.Map;
  * @date 2021-04-07
  */
 @Repository
-public class EmailCodeMapper {
+public class RedisDao {
 
     @Autowired
     private StringRedisTemplate stringRedisTemplate;
 
-    private String hashKey = "emailCode";
 
-    public boolean saveEmailCode(String key, String code, Long expirationTime){
+    public boolean saveCode(String hashKey, String key, String code, Long expirationTime){
         try {
-            stringRedisTemplate.opsForHash().put(hashKey,key,code);
+            stringRedisTemplate.opsForValue().set(hashKey+"_"+key,code,expirationTime,TimeUnit.SECONDS);
             return true;
         }catch (Exception e){
             e.printStackTrace();
@@ -32,15 +32,19 @@ public class EmailCodeMapper {
         }
     }
 
-    public String getEmailCode(String key){
+    public String getCode(String hashKey, String key){
         try {
-            if(stringRedisTemplate.opsForHash().hasKey(hashKey,key)){
-                return stringRedisTemplate.opsForHash().get(hashKey,key).toString();
+            if(stringRedisTemplate.hasKey(hashKey+"_"+key)){
+                return stringRedisTemplate.opsForValue().get(hashKey+"_"+key);
             }
             return null;
         }catch (Exception e){
             e.printStackTrace();
             return null;
         }
+    }
+
+    public boolean saveHashField(String hashKey, String key, String field, Long ExpireTime){
+        return false;
     }
 }

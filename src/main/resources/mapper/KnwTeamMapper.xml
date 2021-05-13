@@ -12,6 +12,9 @@
     <result column="resource_size" jdbcType="REAL" property="resourceSize" />
     <result column="used_size" jdbcType="REAL" property="usedSize" />
   </resultMap>
+  <resultMap extends="BaseResultMap" id="ResultMapWithBLOBs" type="com.example.knw.pojo.KnwTeam">
+    <result column="Position_name" jdbcType="LONGVARCHAR" property="positionName" />
+  </resultMap>
   <sql id="Example_Where_Clause">
     <where>
       <foreach collection="oredCriteria" item="criteria" separator="or">
@@ -74,6 +77,25 @@
     team_id, team_name, team_is_activate, create_time, leader_id, brief, institute, resource_size, 
     used_size
   </sql>
+  <sql id="Blob_Column_List">
+    Position_name
+  </sql>
+  <select id="selectByExampleWithBLOBs" parameterType="com.example.knw.pojo.KnwTeamExample" resultMap="ResultMapWithBLOBs">
+    select
+    <if test="distinct">
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    ,
+    <include refid="Blob_Column_List" />
+    from knw_team
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null">
+      order by ${orderByClause}
+    </if>
+  </select>
   <select id="selectByExample" parameterType="com.example.knw.pojo.KnwTeamExample" resultMap="BaseResultMap">
     select
     <if test="distinct">
@@ -88,9 +110,14 @@
       order by ${orderByClause}
     </if>
   </select>
-  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+  <select id="selectLastTeamID" resultType="java.lang.Integer">
+    select team_id from knw_team order by team_id DESC limit 1
+  </select>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="ResultMapWithBLOBs">
     select 
     <include refid="Base_Column_List" />
+    ,
+    <include refid="Blob_Column_List" />
     from knw_team
     where team_id = #{teamId,jdbcType=INTEGER}
   </select>
@@ -107,12 +134,12 @@
   <insert id="insert" parameterType="com.example.knw.pojo.KnwTeam">
     insert into knw_team (team_id, team_name, team_is_activate, 
       create_time, leader_id, brief, 
-      institute, resource_size, used_size
-      )
+      institute, resource_size, used_size, 
+      Position_name)
     values (#{teamId,jdbcType=INTEGER}, #{teamName,jdbcType=VARCHAR}, #{teamIsActivate,jdbcType=TINYINT}, 
       #{createTime,jdbcType=DATE}, #{leaderId,jdbcType=INTEGER}, #{brief,jdbcType=VARCHAR}, 
-      #{institute,jdbcType=VARCHAR}, #{resourceSize,jdbcType=REAL}, #{usedSize,jdbcType=REAL}
-      )
+      #{institute,jdbcType=VARCHAR}, #{resourceSize,jdbcType=REAL}, #{usedSize,jdbcType=REAL}, 
+      #{positionName,jdbcType=LONGVARCHAR})
   </insert>
   <insert id="insertSelective" parameterType="com.example.knw.pojo.KnwTeam">
     insert into knw_team
@@ -144,6 +171,9 @@
       <if test="usedSize != null">
         used_size,
       </if>
+      <if test="positionName != null">
+        Position_name,
+      </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides=",">
       <if test="teamId != null">
@@ -172,6 +202,9 @@
       </if>
       <if test="usedSize != null">
         #{usedSize,jdbcType=REAL},
+      </if>
+      <if test="positionName != null">
+        #{positionName,jdbcType=LONGVARCHAR},
       </if>
     </trim>
   </insert>
@@ -211,7 +244,26 @@
       <if test="record.usedSize != null">
         used_size = #{record.usedSize,jdbcType=REAL},
       </if>
+      <if test="record.positionName != null">
+        Position_name = #{record.positionName,jdbcType=LONGVARCHAR},
+      </if>
     </set>
+    <if test="_parameter != null">
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExampleWithBLOBs" parameterType="map">
+    update knw_team
+    set team_id = #{record.teamId,jdbcType=INTEGER},
+      team_name = #{record.teamName,jdbcType=VARCHAR},
+      team_is_activate = #{record.teamIsActivate,jdbcType=TINYINT},
+      create_time = #{record.createTime,jdbcType=DATE},
+      leader_id = #{record.leaderId,jdbcType=INTEGER},
+      brief = #{record.brief,jdbcType=VARCHAR},
+      institute = #{record.institute,jdbcType=VARCHAR},
+      resource_size = #{record.resourceSize,jdbcType=REAL},
+      used_size = #{record.usedSize,jdbcType=REAL},
+      Position_name = #{record.positionName,jdbcType=LONGVARCHAR}
     <if test="_parameter != null">
       <include refid="Update_By_Example_Where_Clause" />
     </if>
@@ -258,7 +310,23 @@
       <if test="usedSize != null">
         used_size = #{usedSize,jdbcType=REAL},
       </if>
+      <if test="positionName != null">
+        Position_name = #{positionName,jdbcType=LONGVARCHAR},
+      </if>
     </set>
+    where team_id = #{teamId,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKeyWithBLOBs" parameterType="com.example.knw.pojo.KnwTeam">
+    update knw_team
+    set team_name = #{teamName,jdbcType=VARCHAR},
+      team_is_activate = #{teamIsActivate,jdbcType=TINYINT},
+      create_time = #{createTime,jdbcType=DATE},
+      leader_id = #{leaderId,jdbcType=INTEGER},
+      brief = #{brief,jdbcType=VARCHAR},
+      institute = #{institute,jdbcType=VARCHAR},
+      resource_size = #{resourceSize,jdbcType=REAL},
+      used_size = #{usedSize,jdbcType=REAL},
+      Position_name = #{positionName,jdbcType=LONGVARCHAR}
     where team_id = #{teamId,jdbcType=INTEGER}
   </update>
   <update id="updateByPrimaryKey" parameterType="com.example.knw.pojo.KnwTeam">

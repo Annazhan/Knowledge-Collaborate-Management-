@@ -10,6 +10,7 @@ import com.auth0.jwt.interfaces.RSAKeyProvider;
 import com.auth0.jwt.interfaces.Verification;
 import com.example.knw.exception.AuthorizeException;
 import com.example.knw.exception.NoSuchUserException;
+import com.example.knw.result.ResultEnum;
 import com.example.knw.service.impl.UserServiceImpl;
 import lombok.Data;
 import lombok.Getter;
@@ -19,6 +20,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
 
@@ -150,7 +153,7 @@ public class JwtTokenUtils  {
                 return null;
             }
         }catch (SignatureVerificationException e) {
-            throw new AuthorizeException();
+            throw new AuthorizeException(ResultEnum.AUTHORIZE_FAILURE);
         }catch (TokenExpiredException e){
             if(!isRemember){
                 tokenM.remove(userID, tokenID);
@@ -158,7 +161,7 @@ public class JwtTokenUtils  {
             }
             return userID;
         }catch (InvalidClaimException e){
-            throw new AuthorizeException();
+            throw new AuthorizeException(ResultEnum.AUTHORIZE_FAILURE);
         }
 
     }
@@ -166,12 +169,16 @@ public class JwtTokenUtils  {
     /**
      * 获取Security使用的Authentication
      * @param userID
+     * @param auth
      * @return
      */
-    public Authentication getAuthentication(Integer userID){
+    public Authentication getAuthentication(Integer userID, List<GrantedAuthority> auth){
         UserDetails userDetails = userService.loadUserByUsername(userID.toString());
+        List<GrantedAuthority> authentications = new ArrayList<>();
+        authentications.addAll(auth);
+        authentications.addAll(userDetails.getAuthorities());
         return new UsernamePasswordAuthenticationToken(userID,
-                userDetails.getPassword(),userDetails.getAuthorities());
+                userDetails.getPassword(),authentications);
     }
 
     /**
@@ -184,7 +191,7 @@ public class JwtTokenUtils  {
      * @throws TokenExpiredException
      * @throws JWTVerificationException
      */
-    public boolean deleteToken(String token)
+    public int deleteToken(String token)
             throws NoSuchUserException, AlgorithmMismatchException, AuthorizeException,
             TokenExpiredException, JWTVerificationException {
         String tokenID = null;
@@ -193,14 +200,17 @@ public class JwtTokenUtils  {
             DecodedJWT jwt = decode(token);
             tokenID = jwt.getId();
             userID = Integer.valueOf(jwt.getSubject());
-            return tokenM.remove(userID,tokenID);
+            if(tokenM.remove(userID,tokenID)){
+                return userID;
+            }
+            return -1;
         }catch (SignatureVerificationException e) {
-            throw new AuthorizeException();
+            throw new AuthorizeException(ResultEnum.AUTHORIZE_FAILURE);
         }catch (TokenExpiredException e){
             tokenM.remove(userID, tokenID);
             throw e;
         }catch (InvalidClaimException e){
-            throw new AuthorizeException();
+            throw new AuthorizeException(ResultEnum.AUTHORIZE_FAILURE);
         }
 
     }

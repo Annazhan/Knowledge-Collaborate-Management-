@@ -2,7 +2,6 @@ package com.example.knw.pojo;
 
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.Iterator;
 import java.util.List;
 
 public class JoinTeamExample {
@@ -104,32 +103,6 @@ public class JoinTeamExample {
                 throw new RuntimeException("Between values for " + property + " cannot be null");
             }
             criteria.add(new Criterion(condition, value1, value2));
-        }
-
-        protected void addCriterionForJDBCDate(String condition, Date value, String property) {
-            if (value == null) {
-                throw new RuntimeException("Value for " + property + " cannot be null");
-            }
-            addCriterion(condition, new java.sql.Date(value.getTime()), property);
-        }
-
-        protected void addCriterionForJDBCDate(String condition, List<Date> values, String property) {
-            if (values == null || values.size() == 0) {
-                throw new RuntimeException("Value list for " + property + " cannot be null or empty");
-            }
-            List<java.sql.Date> dateList = new ArrayList<java.sql.Date>();
-            Iterator<Date> iter = values.iterator();
-            while (iter.hasNext()) {
-                dateList.add(new java.sql.Date(iter.next().getTime()));
-            }
-            addCriterion(condition, dateList, property);
-        }
-
-        protected void addCriterionForJDBCDate(String condition, Date value1, Date value2, String property) {
-            if (value1 == null || value2 == null) {
-                throw new RuntimeException("Between values for " + property + " cannot be null");
-            }
-            addCriterion(condition, new java.sql.Date(value1.getTime()), new java.sql.Date(value2.getTime()), property);
         }
 
         public Criteria andJoinIdIsNull() {
@@ -323,52 +296,52 @@ public class JoinTeamExample {
         }
 
         public Criteria andJoinTimeEqualTo(Date value) {
-            addCriterionForJDBCDate("join_time =", value, "joinTime");
+            addCriterion("join_time =", value, "joinTime");
             return (Criteria) this;
         }
 
         public Criteria andJoinTimeNotEqualTo(Date value) {
-            addCriterionForJDBCDate("join_time <>", value, "joinTime");
+            addCriterion("join_time <>", value, "joinTime");
             return (Criteria) this;
         }
 
         public Criteria andJoinTimeGreaterThan(Date value) {
-            addCriterionForJDBCDate("join_time >", value, "joinTime");
+            addCriterion("join_time >", value, "joinTime");
             return (Criteria) this;
         }
 
         public Criteria andJoinTimeGreaterThanOrEqualTo(Date value) {
-            addCriterionForJDBCDate("join_time >=", value, "joinTime");
+            addCriterion("join_time >=", value, "joinTime");
             return (Criteria) this;
         }
 
         public Criteria andJoinTimeLessThan(Date value) {
-            addCriterionForJDBCDate("join_time <", value, "joinTime");
+            addCriterion("join_time <", value, "joinTime");
             return (Criteria) this;
         }
 
         public Criteria andJoinTimeLessThanOrEqualTo(Date value) {
-            addCriterionForJDBCDate("join_time <=", value, "joinTime");
+            addCriterion("join_time <=", value, "joinTime");
             return (Criteria) this;
         }
 
         public Criteria andJoinTimeIn(List<Date> values) {
-            addCriterionForJDBCDate("join_time in", values, "joinTime");
+            addCriterion("join_time in", values, "joinTime");
             return (Criteria) this;
         }
 
         public Criteria andJoinTimeNotIn(List<Date> values) {
-            addCriterionForJDBCDate("join_time not in", values, "joinTime");
+            addCriterion("join_time not in", values, "joinTime");
             return (Criteria) this;
         }
 
         public Criteria andJoinTimeBetween(Date value1, Date value2) {
-            addCriterionForJDBCDate("join_time between", value1, value2, "joinTime");
+            addCriterion("join_time between", value1, value2, "joinTime");
             return (Criteria) this;
         }
 
         public Criteria andJoinTimeNotBetween(Date value1, Date value2) {
-            addCriterionForJDBCDate("join_time not between", value1, value2, "joinTime");
+            addCriterion("join_time not between", value1, value2, "joinTime");
             return (Criteria) this;
         }
 
@@ -383,52 +356,52 @@ public class JoinTeamExample {
         }
 
         public Criteria andApplyTimeEqualTo(Date value) {
-            addCriterionForJDBCDate("apply_time =", value, "applyTime");
+            addCriterion("apply_time =", value, "applyTime");
             return (Criteria) this;
         }
 
         public Criteria andApplyTimeNotEqualTo(Date value) {
-            addCriterionForJDBCDate("apply_time <>", value, "applyTime");
+            addCriterion("apply_time <>", value, "applyTime");
             return (Criteria) this;
         }
 
         public Criteria andApplyTimeGreaterThan(Date value) {
-            addCriterionForJDBCDate("apply_time >", value, "applyTime");
+            addCriterion("apply_time >", value, "applyTime");
             return (Criteria) this;
         }
 
         public Criteria andApplyTimeGreaterThanOrEqualTo(Date value) {
-            addCriterionForJDBCDate("apply_time >=", value, "applyTime");
+            addCriterion("apply_time >=", value, "applyTime");
             return (Criteria) this;
         }
 
         public Criteria andApplyTimeLessThan(Date value) {
-            addCriterionForJDBCDate("apply_time <", value, "applyTime");
+            addCriterion("apply_time <", value, "applyTime");
             return (Criteria) this;
         }
 
         public Criteria andApplyTimeLessThanOrEqualTo(Date value) {
-            addCriterionForJDBCDate("apply_time <=", value, "applyTime");
+            addCriterion("apply_time <=", value, "applyTime");
             return (Criteria) this;
         }
 
         public Criteria andApplyTimeIn(List<Date> values) {
-            addCriterionForJDBCDate("apply_time in", values, "applyTime");
+            addCriterion("apply_time in", values, "applyTime");
             return (Criteria) this;
         }
 
         public Criteria andApplyTimeNotIn(List<Date> values) {
-            addCriterionForJDBCDate("apply_time not in", values, "applyTime");
+            addCriterion("apply_time not in", values, "applyTime");
             return (Criteria) this;
         }
 
         public Criteria andApplyTimeBetween(Date value1, Date value2) {
-            addCriterionForJDBCDate("apply_time between", value1, value2, "applyTime");
+            addCriterion("apply_time between", value1, value2, "applyTime");
             return (Criteria) this;
         }
 
         public Criteria andApplyTimeNotBetween(Date value1, Date value2) {
-            addCriterionForJDBCDate("apply_time not between", value1, value2, "applyTime");
+            addCriterion("apply_time not between", value1, value2, "applyTime");
             return (Criteria) this;
         }
 
@@ -619,6 +592,76 @@ public class JoinTeamExample {
 
         public Criteria andPositionNotBetween(String value1, String value2) {
             addCriterion("`position` not between", value1, value2, "position");
+            return (Criteria) this;
+        }
+
+        public Criteria andJoinTeamReasonIsNull() {
+            addCriterion("join_team_reason is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andJoinTeamReasonIsNotNull() {
+            addCriterion("join_team_reason is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andJoinTeamReasonEqualTo(String value) {
+            addCriterion("join_team_reason =", value, "joinTeamReason");
+            return (Criteria) this;
+        }
+
+        public Criteria andJoinTeamReasonNotEqualTo(String value) {
+            addCriterion("join_team_reason <>", value, "joinTeamReason");
+            return (Criteria) this;
+        }
+
+        public Criteria andJoinTeamReasonGreaterThan(String value) {
+            addCriterion("join_team_reason >", value, "joinTeamReason");
+            return (Criteria) this;
+        }
+
+        public Criteria andJoinTeamReasonGreaterThanOrEqualTo(String value) {
+            addCriterion("join_team_reason >=", value, "joinTeamReason");
+            return (Criteria) this;
+        }
+
+        public Criteria andJoinTeamReasonLessThan(String value) {
+            addCriterion("join_team_reason <", value, "joinTeamReason");
+            return (Criteria) this;
+        }
+
+        public Criteria andJoinTeamReasonLessThanOrEqualTo(String value) {
+            addCriterion("join_team_reason <=", value, "joinTeamReason");
+            return (Criteria) this;
+        }
+
+        public Criteria andJoinTeamReasonLike(String value) {
+            addCriterion("join_team_reason like", value, "joinTeamReason");
+            return (Criteria) this;
+        }
+
+        public Criteria andJoinTeamReasonNotLike(String value) {
+            addCriterion("join_team_reason not like", value, "joinTeamReason");
+            return (Criteria) this;
+        }
+
+        public Criteria andJoinTeamReasonIn(List<String> values) {
+            addCriterion("join_team_reason in", values, "joinTeamReason");
+            return (Criteria) this;
+        }
+
+        public Criteria andJoinTeamReasonNotIn(List<String> values) {
+            addCriterion("join_team_reason not in", values, "joinTeamReason");
+            return (Criteria) this;
+        }
+
+        public Criteria andJoinTeamReasonBetween(String value1, String value2) {
+            addCriterion("join_team_reason between", value1, value2, "joinTeamReason");
+            return (Criteria) this;
+        }
+
+        public Criteria andJoinTeamReasonNotBetween(String value1, String value2) {
+            addCriterion("join_team_reason not between", value1, value2, "joinTeamReason");
             return (Criteria) this;
         }
     }
